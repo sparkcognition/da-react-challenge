@@ -33,12 +33,12 @@ class ArtistDetailSerializer(ArtistSerializer):
 
 
 class BaseAlbumSerializer(serializers.ModelSerializer):
-
+    artist = ArtistSerializer(read_only=True)
     year = serializers.IntegerField(required=True)
 
     class Meta:
         model = Album
-        fields = ['id', 'name', 'year']
+        fields = ['id', 'name', 'year', 'artist']
 
 
 # An specific serializer for create endpoint is needed for documentation purposes,
@@ -49,7 +49,7 @@ class AlbumWriteSerializer(BaseAlbumSerializer):
     artist_name = serializers.CharField(max_length=200, write_only=True)
 
     class Meta(BaseAlbumSerializer.Meta):
-        fields = BaseAlbumSerializer.Meta.fields + ["artist_name"]
+        fields = ['id', 'name', 'year'] + ['artist_name']
 
     def create(self, validated_data):
         artist_name = validated_data.pop("artist_name")
