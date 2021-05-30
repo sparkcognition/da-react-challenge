@@ -1,4 +1,5 @@
 from django.db import models
+from voting.models import Vote
 
 
 class Album(models.Model):
@@ -41,8 +42,18 @@ class Lyric(models.Model):
         on_delete=models.CASCADE,
         help_text="Song")
 
+    # represent the total score based on all the votes received
+    # its a read-only value calculated automatically
     votes = models.IntegerField(
-        default=0
+        default=0, editable=False
     )
 
     objects = models.Manager()
+
+    def save(self, **kwargs):
+        super().save(**kwargs)
+
+    def vote(self, user, score):
+        Vote.objects.record_vote(self, user, score)
+        self.votes = Vote.objects.get_score(self)['score']
+        self.save()
