@@ -11,6 +11,7 @@ from swift_lyrics import views
 
 router = DefaultRouter()
 router.register(r"album", views.AlbumViewSet, basename="album")
+router.register(r"artist", views.ArtistViewSet, basename="artist")
 router.register(r"song", views.SongViewSet, basename="song")
 router.register(r"lyric", views.LyricViewSet, basename="lyric")
 

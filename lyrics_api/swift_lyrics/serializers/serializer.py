@@ -4,6 +4,13 @@ from rest_framework import serializers
 from swift_lyrics.models import Lyric, Song, Album, Artist
 
 
+class ArtistSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Artist
+        fields = ['id', 'name', 'first_year_active']
+
+
 class BaseAlbumSerializer(serializers.ModelSerializer):
 
     year = serializers.IntegerField(required=True)

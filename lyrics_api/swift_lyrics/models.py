@@ -20,6 +20,9 @@ class Album(models.Model):
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, null=True, related_name="albums")
     objects = models.Manager()
 
+    def __str__(self):
+        return self.name
+
 
 class Song(models.Model):
     name = models.TextField(
@@ -36,6 +39,9 @@ class Song(models.Model):
         help_text="Album")
 
     objects = models.Manager()
+
+    def __str__(self):
+        return self.name
 
 
 class Lyric(models.Model):

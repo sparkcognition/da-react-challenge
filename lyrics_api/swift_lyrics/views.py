@@ -5,12 +5,13 @@ from rest_framework.response import Response
 
 from django.http import HttpResponse
 from django.views import View
+from django_filters import rest_framework as dj_filters
 from drf_yasg.utils import no_body, swagger_auto_schema
 # Create your views here.
-from swift_lyrics.models import Lyric, Album, Song
+from swift_lyrics.models import Artist, Lyric, Album, Song
 from swift_lyrics.serializers.serializer import BaseAlbumSerializer, \
     AlbumDetailSerializer, AlbumWriteSerializer, SongDetailSerializer, \
-    SongSerializer, LyricDetailSerializer
+    SongSerializer, LyricDetailSerializer, ArtistSerializer
 
 
 class HealthCheckView(View):
@@ -19,6 +20,25 @@ class HealthCheckView(View):
     """
     def get(self, request, *args, **kwargs):
         return HttpResponse("ok")
+
+
+class ArtistFilter(dj_filters.FilterSet):
+    min_first_year = dj_filters.NumberFilter(field_name="first_year_active", lookup_expr='gte')
+    max_first_year = dj_filters.NumberFilter(field_name="first_year_active", lookup_expr='lte')
+
+    class Meta:
+        model = Artist
+        fields = ['min_first_year', 'max_first_year']
+
+
+class ArtistViewSet(viewsets.ModelViewSet):
+    queryset = Artist.objects.all()
+    filter_backends = [filters.OrderingFilter, dj_filters.DjangoFilterBackend]
+    filterset_class = ArtistFilter
+    ordering_fields = ['name', 'first_year_active']
+
+    def get_serializer_class(self):
+        return ArtistSerializer
 
 
 class AlbumViewSet(mixins.CreateModelMixin,
