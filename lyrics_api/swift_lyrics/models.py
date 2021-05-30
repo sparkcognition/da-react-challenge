@@ -2,13 +2,22 @@ from django.db import models
 from voting.models import Vote
 
 
+class Artist(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+    first_year_active = models.PositiveIntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Album(models.Model):
     name = models.TextField(
         blank=False,
         db_index=True,
         unique=True,
         help_text="Album name - can alternatively use 'id' field set to id of existing album when creating new lyrics")
-
+    year = models.PositiveIntegerField(null=True)
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, null=True, related_name="albums")
     objects = models.Manager()
 
 

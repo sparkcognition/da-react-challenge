@@ -9,7 +9,8 @@ from drf_yasg.utils import no_body, swagger_auto_schema
 # Create your views here.
 from swift_lyrics.models import Lyric, Album, Song
 from swift_lyrics.serializers.serializer import BaseAlbumSerializer, \
-    AlbumDetailSerializer, SongDetailSerializer, SongSerializer, LyricDetailSerializer
+    AlbumDetailSerializer, AlbumWriteSerializer, SongDetailSerializer, \
+    SongSerializer, LyricDetailSerializer
 
 
 class HealthCheckView(View):
@@ -20,7 +21,8 @@ class HealthCheckView(View):
         return HttpResponse("ok")
 
 
-class AlbumViewSet(mixins.ListModelMixin,
+class AlbumViewSet(mixins.CreateModelMixin,
+                   mixins.ListModelMixin,
                    mixins.RetrieveModelMixin,
                    mixins.DestroyModelMixin,
                    viewsets.GenericViewSet):
@@ -29,6 +31,8 @@ class AlbumViewSet(mixins.ListModelMixin,
     def get_serializer_class(self):
         if self.action == "retrieve":
             return AlbumDetailSerializer
+        elif self.action == "create":
+            return AlbumWriteSerializer
         else:
             return BaseAlbumSerializer
 
