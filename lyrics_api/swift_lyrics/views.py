@@ -11,7 +11,7 @@ from drf_yasg.utils import no_body, swagger_auto_schema
 from swift_lyrics.models import Artist, Lyric, Album, Song
 from swift_lyrics.serializers.serializer import BaseAlbumSerializer, \
     AlbumDetailSerializer, AlbumWriteSerializer, SongDetailSerializer, \
-    SongSerializer, LyricDetailSerializer, ArtistSerializer
+    SongSerializer, LyricDetailSerializer, ArtistSerializer, ArtistDetailSerializer
 
 
 class HealthCheckView(View):
@@ -38,7 +38,10 @@ class ArtistViewSet(viewsets.ModelViewSet):
     ordering_fields = ['name', 'first_year_active']
 
     def get_serializer_class(self):
-        return ArtistSerializer
+        if self.action == 'retrieve':
+            return ArtistDetailSerializer
+        else:
+            return ArtistSerializer
 
 
 class AlbumViewSet(mixins.CreateModelMixin,

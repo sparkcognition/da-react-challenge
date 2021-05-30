@@ -1,7 +1,17 @@
-from drf_yasg import openapi
 from rest_framework import serializers
 
 from swift_lyrics.models import Lyric, Song, Album, Artist
+
+
+class AlbumArtistSerializer(serializers.ModelSerializer):
+    """
+    Used to only serialize from each album the id and name.
+    This is needed when serializing albums as reverse relationship
+    for each artist
+    """
+    class Meta:
+        model = Album
+        fields = ['id', 'name']
 
 
 class ArtistSerializer(serializers.ModelSerializer):
@@ -9,6 +19,17 @@ class ArtistSerializer(serializers.ModelSerializer):
     class Meta:
         model = Artist
         fields = ['id', 'name', 'first_year_active']
+
+
+class ArtistDetailSerializer(ArtistSerializer):
+    """
+    Includes the list of albums (id, name) apart from
+    the basic info (id, name, first_year_active) of artist
+    """
+    albums = AlbumArtistSerializer(many=True, read_only=True)
+
+    class Meta(ArtistSerializer.Meta):
+        fields = ArtistSerializer.Meta.fields + ['albums']
 
 
 class BaseAlbumSerializer(serializers.ModelSerializer):
