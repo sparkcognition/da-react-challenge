@@ -4,10 +4,12 @@ from django.db import migrations
 
 import json
 
-from swift_lyrics.models import Lyric, Album, Song
-
 
 def load_initial_data(apps, schema_editor):
+    Album = apps.get_model('swift_lyrics', 'Album')
+    Song = apps.get_model('swift_lyrics', 'Song')
+    Lyric = apps.get_model('swift_lyrics', 'Lyric')
+
     json_data = open('swift_lyrics/fixtures/quotes.json')
     data = json.load(json_data)
     for d in data:
