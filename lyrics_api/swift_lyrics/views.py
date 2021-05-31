@@ -3,9 +3,10 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.views import View
 from django_filters import rest_framework as dj_filters
+from drf_yasg import openapi
 from drf_yasg.utils import no_body, swagger_auto_schema
 # Create your views here.
 from swift_lyrics.models import Artist, Lyric, Album, Song
@@ -93,5 +94,21 @@ class LyricViewSet(viewsets.ModelViewSet):
     def vote_down(self, request, pk=None):
         lyric = self.get_object()
         lyric.vote(request.user, -1)
+        serializer = self.get_serializer(lyric)
+        return Response(serializer.data)
+
+    # TODO: find a way to remove the auto-generated parameters (search, ordering, page, size)
+    @swagger_auto_schema(operation_description="Return a random lyric", manual_parameters=[
+        openapi.Parameter('artist', in_=openapi.IN_QUERY, description='filter by artist name', type=openapi.TYPE_STRING),
+    ])
+    @action(detail=False, methods=["get"])
+    def shuffle(self, request, pk=None):
+        artist_name = request.query_params.get('artist')
+        qs_lyrics = Lyric.objects
+        if artist_name:
+            qs_lyrics = qs_lyrics.filter(song__album__artist__name=artist_name)
+        lyric = qs_lyrics.order_by('?').first()
+        if not lyric:
+            raise Http404
         serializer = self.get_serializer(lyric)
         return Response(serializer.data)
