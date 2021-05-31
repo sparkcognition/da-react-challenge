@@ -18,7 +18,6 @@ class Album(models.Model):
         help_text="Album name - can alternatively use 'id' field set to id of existing album when creating new lyrics")
     year = models.PositiveIntegerField(null=True)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, null=True, related_name="albums")
-    objects = models.Manager()
 
     def __str__(self):
         return self.name
@@ -37,8 +36,6 @@ class Song(models.Model):
         null=True,
         on_delete=models.CASCADE,
         help_text="Album")
-
-    objects = models.Manager()
 
     def __str__(self):
         return self.name
@@ -62,8 +59,6 @@ class Lyric(models.Model):
     votes = models.IntegerField(
         default=0, editable=False
     )
-
-    objects = models.Manager()
 
     def save(self, **kwargs):
         super().save(**kwargs)
