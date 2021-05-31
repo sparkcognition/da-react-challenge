@@ -103,7 +103,7 @@ class LyricDetailSerializer(LyricSerializer):
         if not album_id:
             raise serializers.ValidationError("album.id is required")
         try:
-            Album.objects.get(id=album_id)
+            album = Album.objects.get(id=album_id)
         except Album.DoesNotExist:
             raise serializers.ValidationError(
                 f"There is not album with the id={album_id}. Try another one.")
@@ -116,17 +116,6 @@ class LyricDetailSerializer(LyricSerializer):
 
             song = self.initial_data.get('song', dict())
             song_name = song.get('name', None)
-
-            album = None
-            if album_id:
-                album = Album.objects.get(id=album_id)
-            else:
-                album_name = self.initial_data.get('album', dict()).get('name', None)
-                if album_name:
-                    album = Album.objects.filter(name=album_name).first()
-                    if album is None:
-                        album = Album(name=album_name)
-                        album.save()
 
             if song_name:
                 song = Song.objects.filter(name=song_name).first()
