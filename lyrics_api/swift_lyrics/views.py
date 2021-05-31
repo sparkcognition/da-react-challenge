@@ -1,4 +1,4 @@
-from rest_framework import mixins, filters, status, viewsets
+from rest_framework import mixins, filters, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -8,7 +8,7 @@ from django.views import View
 from django_filters import rest_framework as dj_filters
 from drf_yasg import openapi
 from drf_yasg.utils import no_body, swagger_auto_schema
-# Create your views here.
+
 from swift_lyrics.models import Artist, Lyric, Album, Song
 from swift_lyrics.serializers.serializer import BaseAlbumSerializer, \
     AlbumDetailSerializer, AlbumWriteSerializer, SongDetailSerializer, \
