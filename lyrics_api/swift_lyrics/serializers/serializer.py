@@ -12,11 +12,11 @@ class BaseArtistSerializer(serializers.ModelSerializer):
 
 
 class BaseAlbumSerializer(serializers.ModelSerializer):
+    artist = BaseArtistSerializer()
 
     class Meta:
         model = Album
-        fields = ['id', 'name']
-
+        fields = ['id', 'name', 'year', 'artist']
 
 class BaseSongSerializer(serializers.ModelSerializer):
 
@@ -39,13 +39,43 @@ class ArtistDetailSerializer(BaseArtistSerializer):
         fields = BaseArtistSerializer.Meta.fields + ['albums']
 
 
+class AlbumCreationSerializer(BaseAlbumSerializer):
+    artist = serializers.DjangoModelField()
+
+    class Meta(BaseAlbumSerializer.Meta):
+        fields = BaseAlbumSerializer.Meta.fields
+        extra_kwargs = {
+            'year': {'required': True},
+            'artist': {'required': True},
+        }
+
+    def to_internal_value(self, data):
+        artist = self.initial_data.get('artist', None)
+        if isinstance(artist, dict):
+            name = artist.get('name', None)
+            if not name:
+                raise serializers.ValidationError(dict(
+                    artist=dict(name=["This field is required",])
+                ))
+            first_year_active = artist.get('first_year_active', None)
+            if not first_year_active and not Artist.objects.filter(name=name).exists():
+                raise serializers.ValidationError(dict(
+                    artist=dict(first_year_active=["This field is required",])
+                ))
+            artist_instance, _ = Artist.objects.get_or_create(
+                name=name, defaults=dict(first_year_active=first_year_active)
+            )
+            data['artist'] = artist_instance.id
+            
+        return super().to_internal_value(data)
+
+
 class AlbumDetailSerializer(BaseAlbumSerializer):
     songs = BaseSongSerializer(many=True, read_only=True)
     artist = BaseArtistSerializer()
 
     class Meta(BaseAlbumSerializer.Meta):
         fields = BaseAlbumSerializer.Meta.fields + ['songs', 'artist']
-
 
 class SongSerializer(BaseSongSerializer):
     album = BaseAlbumSerializer()
