@@ -1,7 +1,14 @@
 from drf_yasg import openapi
 from rest_framework import serializers
 
-from swift_lyrics.models import Lyric, Song, Album
+from swift_lyrics.models import Lyric, Song, Album, Artist
+
+
+class BaseArtistSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Artist
+        fields = ['id', 'name', 'first_year_active']
 
 
 class BaseAlbumSerializer(serializers.ModelSerializer):
@@ -22,13 +29,22 @@ class LyricSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lyric
         fields = ['id', 'text', 'votes', 'upvotes', 'downvotes']
+        read_only_fields = ['votes', 'upvotes', 'downvotes']
+
+
+class ArtistDetailSerializer(BaseArtistSerializer):
+    albums = BaseAlbumSerializer(many=True, read_only=True)
+
+    class Meta(BaseArtistSerializer.Meta):
+        fields = BaseArtistSerializer.Meta.fields + ['albums']
 
 
 class AlbumDetailSerializer(BaseAlbumSerializer):
     songs = BaseSongSerializer(many=True, read_only=True)
+    artist = BaseArtistSerializer()
 
     class Meta(BaseAlbumSerializer.Meta):
-        fields = BaseAlbumSerializer.Meta.fields + ['songs']
+        fields = BaseAlbumSerializer.Meta.fields + ['songs', 'artist']
 
 
 class SongSerializer(BaseSongSerializer):
@@ -48,6 +64,7 @@ class SongDetailSerializer(SongSerializer):
 class LyricDetailSerializer(LyricSerializer):
     song = BaseSongSerializer(read_only=True)
     album = BaseAlbumSerializer(source='song.album', read_only=True)
+    artist = BaseArtistSerializer(source='song.album.artist', read_only=True)
 
     def validate(self, data):
         song_id = self.initial_data.get('song', dict()).get('id', None)
@@ -88,4 +105,4 @@ class LyricDetailSerializer(LyricSerializer):
         return lyric
 
     class Meta(LyricSerializer.Meta):
-        fields = LyricSerializer.Meta.fields + ['song', 'album']
+        fields = LyricSerializer.Meta.fields + ['song', 'album', 'artist']

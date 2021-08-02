@@ -6,6 +6,19 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
+    def artist_taylor_swift(apps, schema_editor):
+        """
+        Función para unir distintos proyectos de nombre Successfee y Caja.
+        """
+        Album = apps.get_model('swift_lyrics', 'Album')
+        Artist = apps.get_model('swift_lyrics', 'Artist')
+        # Create Artist 
+        taylor_swift = Artist.objects.create(
+            name="Taylor Swift", first_year_active=2003
+        )
+        # Set Taylor Swift as Artist for every existing Album
+        Album.objects.update(artist=taylor_swift)
+
     dependencies = [
         ('swift_lyrics', '0003_auto_20210802_1858'),
     ]
@@ -29,4 +42,5 @@ class Migration(migrations.Migration):
             name='artist',
             field=models.ForeignKey(help_text='Artist', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='albums', to='swift_lyrics.artist'),
         ),
+        migrations.RunPython(artist_taylor_swift, migrations.RunPython.noop)
     ]
