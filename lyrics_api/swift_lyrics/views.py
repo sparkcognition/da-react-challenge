@@ -78,7 +78,9 @@ class UpvoteLyricDetail(mixins.RetrieveModelMixin,
         return Lyric.objects.all()
 
     def get(self, request, *args, **kwargs):
-        Lyric.objects.filter(**kwargs).update(votes=models.F('votes')+1)
+        Lyric.objects.filter(**kwargs).update(
+            votes=models.F('votes')+1, upvotes=models.F('upvotes')+1
+        )
         return self.retrieve(request, *args, **kwargs)
 
 class DownvoteLyricDetail(mixins.RetrieveModelMixin,
@@ -89,7 +91,9 @@ class DownvoteLyricDetail(mixins.RetrieveModelMixin,
         return Lyric.objects.all()
 
     def get(self, request, *args, **kwargs):
-        Lyric.objects.filter(**kwargs).update(votes=models.F('votes')-1)
+        Lyric.objects.filter(**kwargs).update(
+            votes=models.F('votes')+1, downvotes=models.F('downvotes')+1
+        )
         return self.retrieve(request, *args, **kwargs)
 
 class APIIndex(mixins.ListModelMixin,
