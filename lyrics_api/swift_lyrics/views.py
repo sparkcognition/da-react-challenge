@@ -5,10 +5,10 @@ from django.http import HttpResponse
 from django.views import View
 from django.db import models
 # Create your views here.
-from swift_lyrics.models import Lyric, Album, Song
-from swift_lyrics.serializers.serializer import LyricSerializer, BaseSongSerializer, BaseAlbumSerializer, \
-    AlbumDetailSerializer, \
-    SongDetailSerializer, LyricSerializer, SongSerializer, LyricDetailSerializer
+from swift_lyrics.models import Lyric, Album, Song, Artist
+from swift_lyrics.serializers.serializer import BaseAlbumSerializer, BaseArtistSerializer, \
+    AlbumDetailSerializer, AlbumCreationSerializer, ArtistDetailSerializer, \
+    SongDetailSerializer, SongSerializer, LyricDetailSerializer
 
 
 class HealthCheckView(View):
@@ -19,7 +19,29 @@ class HealthCheckView(View):
         return HttpResponse("ok")
 
 
+class ArtistIndex(mixins.ListModelMixin,
+                    generics.GenericAPIView):
+    serializer_class = BaseArtistSerializer
+
+    def get_queryset(self):
+        return Artist.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+class ArtistDetail(mixins.RetrieveModelMixin,
+                    generics.GenericAPIView):
+
+    serializer_class = ArtistDetailSerializer
+
+    def get_queryset(self):
+        return Artist.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
 class AlbumIndex(mixins.ListModelMixin,
+                  mixins.CreateModelMixin,
                  generics.GenericAPIView):
     serializer_class = BaseAlbumSerializer
 
@@ -29,6 +51,9 @@ class AlbumIndex(mixins.ListModelMixin,
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        self.serializer_class = AlbumCreationSerializer
+        return self.create(request, *args, **kwargs)
 
 class AlbumDetail(mixins.RetrieveModelMixin,
                   mixins.DestroyModelMixin,
