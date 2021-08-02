@@ -21,7 +21,7 @@ class BaseSongSerializer(serializers.ModelSerializer):
 class LyricSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lyric
-        fields = ['id', 'text', 'votes']
+        fields = ['id', 'text', 'votes', 'upvotes', 'downvotes']
 
 
 class AlbumDetailSerializer(BaseAlbumSerializer):

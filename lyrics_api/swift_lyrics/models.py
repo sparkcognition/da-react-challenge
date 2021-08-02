@@ -44,5 +44,11 @@ class Lyric(models.Model):
     votes = models.IntegerField(
         default=0
     )
+    upvotes = models.IntegerField(
+        default=0
+    )
+    downvotes = models.IntegerField(
+        default=0
+    )
 
     objects = models.Manager()
