@@ -3,6 +3,7 @@ from rest_framework.response import Response
 
 from django.http import HttpResponse
 from django.views import View
+from django.db import models
 # Create your views here.
 from swift_lyrics.models import Lyric, Album, Song
 from swift_lyrics.serializers.serializer import LyricSerializer, BaseSongSerializer, BaseAlbumSerializer, \
@@ -69,6 +70,27 @@ class SongDetail(mixins.RetrieveModelMixin,
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
+class UpvoteLyricDetail(mixins.RetrieveModelMixin,
+                        generics.GenericAPIView):
+    serializer_class = LyricDetailSerializer
+
+    def get_queryset(self):
+        return Lyric.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        Lyric.objects.filter(**kwargs).update(votes=models.F('votes')+1)
+        return self.retrieve(request, *args, **kwargs)
+
+class DownvoteLyricDetail(mixins.RetrieveModelMixin,
+                        generics.GenericAPIView):
+    serializer_class = LyricDetailSerializer
+
+    def get_queryset(self):
+        return Lyric.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        Lyric.objects.filter(**kwargs).update(votes=models.F('votes')-1)
+        return self.retrieve(request, *args, **kwargs)
 
 class APIIndex(mixins.ListModelMixin,
                mixins.CreateModelMixin,
