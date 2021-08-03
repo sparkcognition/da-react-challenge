@@ -1,13 +1,15 @@
+import random
+
 from django.http import HttpResponse
 from django.views import View
 from django.db import models
 
-from rest_framework import mixins, generics, filters, viewsets
-from swift_lyrics.models import Lyric, Album, Song, Artist
+from rest_framework import mixins, generics, filters, viewsets, response
 
 from django_filters import rest_framework as django_filters
 
-from swift_lyrics.filters import ArtistFilter
+from swift_lyrics.filters import ArtistFilter, RandomLyricFilter
+from swift_lyrics.models import Lyric, Album, Song, Artist
 from swift_lyrics.serializers.serializer import (
     BaseArtistSerializer,
     AlbumDetailSerializer,
@@ -131,6 +133,29 @@ class DownvoteLyricDetail(mixins.RetrieveModelMixin,
             votes=models.F('votes')+1, downvotes=models.F('downvotes')+1
         )
         return self.retrieve(request, *args, **kwargs)
+
+
+class RandomLyricDetail(generics.GenericAPIView):
+    serializer_class = LyricDetailSerializer
+    pagination_class = None
+    filter_backends = (django_filters.DjangoFilterBackend,)
+    filterset_class = RandomLyricFilter
+
+    def get_queryset(self):
+        return Lyric.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        if not queryset.exists():
+            return response.Response(dict())
+        random_id = random.choice(queryset.values_list('id', flat=True))
+        serializer = self.get_serializer(queryset.get(id=random_id))
+
+        return response.Response(serializer.data)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
 
 class APIIndex(mixins.ListModelMixin,
                mixins.CreateModelMixin,
