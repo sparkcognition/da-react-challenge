@@ -1,14 +1,22 @@
-from rest_framework import mixins, generics, filters, status, viewsets
-from rest_framework.response import Response
-
 from django.http import HttpResponse
 from django.views import View
 from django.db import models
-# Create your views here.
+
+from rest_framework import mixins, generics, filters, viewsets
 from swift_lyrics.models import Lyric, Album, Song, Artist
-from swift_lyrics.serializers.serializer import BaseAlbumSerializer, BaseArtistSerializer, \
-    AlbumDetailSerializer, AlbumCreationSerializer, ArtistDetailSerializer, \
-    SongDetailSerializer, SongSerializer, LyricDetailSerializer
+
+from django_filters import rest_framework as django_filters
+
+from swift_lyrics.filters import ArtistFilter
+from swift_lyrics.serializers.serializer import (
+    BaseArtistSerializer,
+    AlbumDetailSerializer,
+    AlbumCreationSerializer,
+    ArtistDetailSerializer,
+    SongDetailSerializer,
+    SongSerializer,
+    LyricDetailSerializer,
+)
 
 
 class HealthCheckView(View):
@@ -22,6 +30,9 @@ class HealthCheckView(View):
 class ArtistViewSet(viewsets.ModelViewSet):
     queryset = Artist.objects.all()
     serializer_class = BaseArtistSerializer
+    filter_backends = (django_filters.DjangoFilterBackend, filters.OrderingFilter)
+    filterset_class = ArtistFilter
+    ordering_fields = ['first_year_active', 'name']
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
