@@ -1,14 +1,22 @@
-from rest_framework import mixins, generics, filters, status
-from rest_framework.response import Response
-
 from django.http import HttpResponse
 from django.views import View
 from django.db import models
-# Create your views here.
+
+from rest_framework import mixins, generics, filters, viewsets
 from swift_lyrics.models import Lyric, Album, Song, Artist
-from swift_lyrics.serializers.serializer import BaseAlbumSerializer, BaseArtistSerializer, \
-    AlbumDetailSerializer, AlbumCreationSerializer, ArtistDetailSerializer, \
-    SongDetailSerializer, SongSerializer, LyricDetailSerializer
+
+from django_filters import rest_framework as django_filters
+
+from swift_lyrics.filters import ArtistFilter
+from swift_lyrics.serializers.serializer import (
+    BaseArtistSerializer,
+    AlbumDetailSerializer,
+    AlbumCreationSerializer,
+    ArtistDetailSerializer,
+    SongDetailSerializer,
+    SongSerializer,
+    LyricDetailSerializer,
+)
 
 
 class HealthCheckView(View):
@@ -19,31 +27,34 @@ class HealthCheckView(View):
         return HttpResponse("ok")
 
 
-class ArtistIndex(mixins.ListModelMixin,
-                    generics.GenericAPIView):
+class ArtistViewSet(viewsets.ModelViewSet):
+    queryset = Artist.objects.all()
     serializer_class = BaseArtistSerializer
+    filter_backends = (django_filters.DjangoFilterBackend, filters.OrderingFilter)
+    filterset_class = ArtistFilter
+    ordering_fields = ['first_year_active', 'name']
 
-    def get_queryset(self):
-        return Artist.objects.all()
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return ArtistDetailSerializer
+        return super().get_serializer_class()
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
-class ArtistDetail(mixins.RetrieveModelMixin,
-                    generics.GenericAPIView):
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
 
-    serializer_class = ArtistDetailSerializer
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
 
-    def get_queryset(self):
-        return Artist.objects.all()
-
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
 
 class AlbumIndex(mixins.ListModelMixin,
                   mixins.CreateModelMixin,
                  generics.GenericAPIView):
-    serializer_class = BaseAlbumSerializer
+    serializer_class = AlbumDetailSerializer
 
     def get_queryset(self):
         return Album.objects.all()
