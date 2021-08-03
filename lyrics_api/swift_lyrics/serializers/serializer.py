@@ -12,11 +12,10 @@ class BaseArtistSerializer(serializers.ModelSerializer):
 
 
 class BaseAlbumSerializer(serializers.ModelSerializer):
-    artist = BaseArtistSerializer()
 
     class Meta:
         model = Album
-        fields = ['id', 'name', 'year', 'artist']
+        fields = ['id', 'name', 'year']
 
 class BaseSongSerializer(serializers.ModelSerializer):
 
@@ -43,7 +42,7 @@ class AlbumCreationSerializer(BaseAlbumSerializer):
     artist = serializers.DjangoModelField()
 
     class Meta(BaseAlbumSerializer.Meta):
-        fields = BaseAlbumSerializer.Meta.fields
+        fields = BaseAlbumSerializer.Meta.fields + ['artist']
         extra_kwargs = {
             'year': {'required': True},
             'artist': {'required': True},
@@ -57,18 +56,22 @@ class AlbumCreationSerializer(BaseAlbumSerializer):
                 raise serializers.ValidationError(dict(
                     artist=dict(name=["This field is required",])
                 ))
-            first_year_active = artist.get('first_year_active', None)
-            if not first_year_active and not Artist.objects.filter(name=name).exists():
+            year = artist.get('first_year_active', None)
+            if not year and not Artist.objects.filter(name=name).exists():
                 raise serializers.ValidationError(dict(
                     artist=dict(first_year_active=["This field is required",])
                 ))
             artist_instance, _ = Artist.objects.get_or_create(
-                name=name, defaults=dict(first_year_active=first_year_active)
+                name=name, defaults=dict(first_year_active=year)
             )
             data['artist'] = artist_instance.id
             
         return super().to_internal_value(data)
 
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['artist'] = BaseArtistSerializer(instance.artist).data
+        return response
 
 class AlbumDetailSerializer(BaseAlbumSerializer):
     songs = BaseSongSerializer(many=True, read_only=True)
@@ -76,6 +79,7 @@ class AlbumDetailSerializer(BaseAlbumSerializer):
 
     class Meta(BaseAlbumSerializer.Meta):
         fields = BaseAlbumSerializer.Meta.fields + ['songs', 'artist']
+
 
 class SongSerializer(BaseSongSerializer):
     album = BaseAlbumSerializer()
@@ -92,47 +96,66 @@ class SongDetailSerializer(SongSerializer):
 
 
 class LyricDetailSerializer(LyricSerializer):
-    song = BaseSongSerializer(read_only=True)
+    song = serializers.DjangoModelField()
     album = BaseAlbumSerializer(source='song.album', read_only=True)
     artist = BaseArtistSerializer(source='song.album.artist', read_only=True)
 
-    def validate(self, data):
-        song_id = self.initial_data.get('song', dict()).get('id', None)
-        if song_id:
-            # If song_id, then the album and song already exist, just fetch them from datastore
-            song = Song.objects.get(id=song_id)
-            data['song'] = song
-        else:
-            # If album_id, then album already exists - just fetch, then handle create/fetch song
-            album_id = self.initial_data.get('album', dict()).get('id', None)
-
-            song = self.initial_data.get('song', dict())
-            song_name = song.get('name', None)
-
+    def to_internal_value(self, data):
+        song = self.initial_data.get('song', None)
+        if isinstance(song, int):
+            # If song_id, then the album and song already exists,
+            # just fetch them from datastore
+            pass
+        elif isinstance(song, dict):
+            # If album_id, then album already exists - just fetch,
+            # then handle create/fetch song
+            album_id = self.initial_data.get('album', None)
             album = None
-            if album_id:
-                album = Album.objects.get(id=album_id)
+            if not album_id:
+                raise serializers.ValidationError(dict(
+                    album=["This field is required",]
+                ))
+            elif album_id and isinstance(album_id, int):
+                albums = Album.objects.filter(id=album_id)
+                if albums.exists():
+                    album = albums.first()
+                else:
+                    raise serializers.ValidationError(dict(
+                        album=[(
+                            f"Invalid pk \'\"{album_id}\"\' - "
+                            "object does not exist."),]
+                    ))
             else:
-                album_name = self.initial_data.get('album', dict()).get('name', None)
-                if album_name:
-                    album = Album.objects.filter(name=album_name).first()
-                    if album is None:
-                        album = Album(name=album_name)
-                        album.save()
-
+                raise serializers.ValidationError(dict(
+                    album=["A valid integer is required.",]
+                ))
+            song_name = song.get('name', None)
             if song_name:
-                song = Song.objects.filter(name=song_name).first()
-                if song is None:
-                    song = Song(name=song_name, album=album)
-                    song.save()
-                data['song'] = song
+                song, _ = Song.objects.get_or_create(
+                    name=song_name, album=album, defaults=dict())
+                data['song'] = song.id
+            else:
+                raise serializers.ValidationError(dict(
+                    song=dict(name=["This field is required",])
+                ))
+        else:
+            raise serializers.ValidationError(dict(
+                song=["This field is required",]
+            ))
 
-        return super().validate(data)
+
+        return super().to_internal_value(data)
 
     def create(self, validated_data):
         lyric = Lyric(**validated_data)
         lyric.save()
         return lyric
 
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['song'] = BaseSongSerializer(instance.song).data
+        return response
+
     class Meta(LyricSerializer.Meta):
         fields = LyricSerializer.Meta.fields + ['song', 'album', 'artist']
+        read_only_fields = LyricSerializer.Meta.read_only_fields + ['artist']
