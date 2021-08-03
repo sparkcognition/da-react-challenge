@@ -1,4 +1,4 @@
-from rest_framework import mixins, generics, filters, status
+from rest_framework import mixins, generics, filters, status, viewsets
 from rest_framework.response import Response
 
 from django.http import HttpResponse
@@ -19,31 +19,31 @@ class HealthCheckView(View):
         return HttpResponse("ok")
 
 
-class ArtistIndex(mixins.ListModelMixin,
-                    generics.GenericAPIView):
+class ArtistViewSet(viewsets.ModelViewSet):
+    queryset = Artist.objects.all()
     serializer_class = BaseArtistSerializer
 
-    def get_queryset(self):
-        return Artist.objects.all()
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return ArtistDetailSerializer
+        return super().get_serializer_class()
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
-class ArtistDetail(mixins.RetrieveModelMixin,
-                    generics.GenericAPIView):
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
 
-    serializer_class = ArtistDetailSerializer
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
 
-    def get_queryset(self):
-        return Artist.objects.all()
-
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
 
 class AlbumIndex(mixins.ListModelMixin,
                   mixins.CreateModelMixin,
                  generics.GenericAPIView):
-    serializer_class = BaseAlbumSerializer
+    serializer_class = AlbumDetailSerializer
 
     def get_queryset(self):
         return Album.objects.all()
