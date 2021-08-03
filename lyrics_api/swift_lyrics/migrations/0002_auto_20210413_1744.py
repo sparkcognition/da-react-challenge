@@ -4,10 +4,12 @@ from django.db import migrations
 
 import json
 
-from swift_lyrics.models import Lyric, Album, Song
+from swift_lyrics.models import Lyric, Album, Song, Artist
 
 
 def load_initial_data(apps, schema_editor):
+    default_artist = Artist.objects.create(
+        name="Taylor Swift", first_year_active=2003)
     json_data = open('swift_lyrics/fixtures/quotes.json')
     data = json.load(json_data)
     for d in data:
@@ -17,7 +19,7 @@ def load_initial_data(apps, schema_editor):
 
         album = Album.objects.filter(name=album_name).first()
         if album is None:
-            album = Album(name=album_name)
+            album = Album(name=album_name, artist=default_artist)
             album.save()
 
         song = Song.objects.filter(name=song_name).first()
