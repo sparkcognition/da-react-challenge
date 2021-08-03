@@ -26,8 +26,6 @@ class Album(models.Model):
     artist = models.ForeignKey(
         Artist,
         related_name="albums",
-        null=True,
-        blank=False,
         on_delete=models.CASCADE,
         help_text="Artist")
 
