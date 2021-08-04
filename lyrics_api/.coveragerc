@@ -6,13 +6,12 @@ omit =
     */asgi.py
     */wsgi.py
     */migrations/*
-    fabfile.py
     */admin.py
     */apps.py
     */__init__.py
     */tests.py
     */test*.py
-    manage.py
+    */manage.py
     */urls.py
     */factories.py
     */admin_utils.py
