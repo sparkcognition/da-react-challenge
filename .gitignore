@@ -20,3 +20,5 @@ dist/
 /env/
 .python-version
 *.sqlite3
+cov.xml
+htmlcov/

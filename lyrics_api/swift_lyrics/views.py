@@ -25,6 +25,7 @@ class HealthCheckView(View):
     """
     Checks to see if the site is healthy.
     """
+
     def get(self, request, *args, **kwargs):
         return HttpResponse("ok")
 
@@ -34,10 +35,10 @@ class ArtistViewSet(viewsets.ModelViewSet):
     serializer_class = BaseArtistSerializer
     filter_backends = (django_filters.DjangoFilterBackend, filters.OrderingFilter)
     filterset_class = ArtistFilter
-    ordering_fields = ['first_year_active', 'name']
+    ordering_fields = ["first_year_active", "name"]
 
     def get_serializer_class(self):
-        if self.action == 'retrieve':
+        if self.action == "retrieve":
             return ArtistDetailSerializer
         return super().get_serializer_class()
 
@@ -53,9 +54,10 @@ class ArtistViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
 
-class AlbumIndex(mixins.ListModelMixin,
-                  mixins.CreateModelMixin,
-                 generics.GenericAPIView):
+
+class AlbumIndex(
+    mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView
+):
     serializer_class = AlbumDetailSerializer
 
     def get_queryset(self):
@@ -68,9 +70,10 @@ class AlbumIndex(mixins.ListModelMixin,
         self.serializer_class = AlbumCreationSerializer
         return self.create(request, *args, **kwargs)
 
-class AlbumDetail(mixins.RetrieveModelMixin,
-                  mixins.DestroyModelMixin,
-                generics.GenericAPIView):
+
+class AlbumDetail(
+    mixins.RetrieveModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView
+):
     serializer_class = AlbumDetailSerializer
 
     def get_queryset(self):
@@ -83,8 +86,7 @@ class AlbumDetail(mixins.RetrieveModelMixin,
         return self.destroy(request, *args, **kwargs)
 
 
-class SongIndex(mixins.ListModelMixin,
-                 generics.GenericAPIView):
+class SongIndex(mixins.ListModelMixin, generics.GenericAPIView):
     serializer_class = SongSerializer
 
     def get_queryset(self):
@@ -94,9 +96,9 @@ class SongIndex(mixins.ListModelMixin,
         return self.list(request, *args, **kwargs)
 
 
-class SongDetail(mixins.RetrieveModelMixin,
-                 mixins.DestroyModelMixin,
-                generics.GenericAPIView):
+class SongDetail(
+    mixins.RetrieveModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView
+):
     serializer_class = SongDetailSerializer
 
     def get_queryset(self):
@@ -108,8 +110,8 @@ class SongDetail(mixins.RetrieveModelMixin,
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
-class UpvoteLyricDetail(mixins.RetrieveModelMixin,
-                        generics.GenericAPIView):
+
+class UpvoteLyricDetail(mixins.RetrieveModelMixin, generics.GenericAPIView):
     serializer_class = LyricDetailSerializer
 
     def get_queryset(self):
@@ -117,12 +119,12 @@ class UpvoteLyricDetail(mixins.RetrieveModelMixin,
 
     def get(self, request, *args, **kwargs):
         Lyric.objects.filter(**kwargs).update(
-            votes=models.F('votes')+1, upvotes=models.F('upvotes')+1
+            votes=models.F("votes") + 1, upvotes=models.F("upvotes") + 1
         )
         return self.retrieve(request, *args, **kwargs)
 
-class DownvoteLyricDetail(mixins.RetrieveModelMixin,
-                        generics.GenericAPIView):
+
+class DownvoteLyricDetail(mixins.RetrieveModelMixin, generics.GenericAPIView):
     serializer_class = LyricDetailSerializer
 
     def get_queryset(self):
@@ -130,7 +132,7 @@ class DownvoteLyricDetail(mixins.RetrieveModelMixin,
 
     def get(self, request, *args, **kwargs):
         Lyric.objects.filter(**kwargs).update(
-            votes=models.F('votes')+1, downvotes=models.F('downvotes')+1
+            votes=models.F("votes") + 1, downvotes=models.F("downvotes") + 1
         )
         return self.retrieve(request, *args, **kwargs)
 
@@ -148,7 +150,7 @@ class RandomLyricDetail(generics.GenericAPIView):
         queryset = self.filter_queryset(self.get_queryset())
         if not queryset.exists():
             return response.Response(dict())
-        random_id = random.choice(queryset.values_list('id', flat=True))
+        random_id = random.choice(queryset.values_list("id", flat=True))
         serializer = self.get_serializer(queryset.get(id=random_id))
 
         return response.Response(serializer.data)
@@ -157,14 +159,11 @@ class RandomLyricDetail(generics.GenericAPIView):
         return self.list(request, *args, **kwargs)
 
 
-class APIIndex(mixins.ListModelMixin,
-               mixins.CreateModelMixin,
-               generics.GenericAPIView):
+class APIIndex(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
     serializer_class = LyricDetailSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['text', 'song__name', 'song__album__name']
-    ordering_fields = ['text', 'song__name', 'song__album__name']
-
+    search_fields = ["text", "song__name", "song__album__name"]
+    ordering_fields = ["text", "song__name", "song__album__name"]
 
     def get_queryset(self):
         return Lyric.objects.all()
@@ -176,10 +175,12 @@ class APIIndex(mixins.ListModelMixin,
         return self.create(request, *args, **kwargs)
 
 
-class APIDetail(mixins.RetrieveModelMixin,
-                mixins.UpdateModelMixin,
-                mixins.DestroyModelMixin,
-                generics.GenericAPIView):
+class APIDetail(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    generics.GenericAPIView,
+):
     serializer_class = LyricDetailSerializer
 
     def get_queryset(self):
