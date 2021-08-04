@@ -21,3 +21,4 @@ dist/
 .python-version
 *.sqlite3
 cov.xml
+htmlcov/
