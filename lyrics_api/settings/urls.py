@@ -21,8 +21,7 @@ from django.conf.urls import url, include
 from swift_lyrics.views import HealthCheckView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('health/', HealthCheckView.as_view(), name="health"),
-    url(r'^swiftlyrics/?', include('swift_lyrics.urls')),
-
+    path("admin/", admin.site.urls),
+    path("health/", HealthCheckView.as_view(), name="health"),
+    url(r"^swiftlyrics/?", include("swift_lyrics.urls")),
 ]

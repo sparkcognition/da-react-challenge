@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class SwiftLyricsConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'swift_lyrics'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "swift_lyrics"

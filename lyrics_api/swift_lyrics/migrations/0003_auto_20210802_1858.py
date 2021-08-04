@@ -6,28 +6,36 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swift_lyrics', '0002_auto_20210413_1744'),
+        ("swift_lyrics", "0002_auto_20210413_1744"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='lyric',
-            name='downvotes',
+            model_name="lyric",
+            name="downvotes",
             field=models.IntegerField(default=0),
         ),
         migrations.AddField(
-            model_name='lyric',
-            name='upvotes',
+            model_name="lyric",
+            name="upvotes",
             field=models.IntegerField(default=0),
         ),
         migrations.AlterField(
-            model_name='album',
-            name='name',
-            field=models.TextField(db_index=True, help_text="Album name - can alternatively use 'id' field set to id of existing album when creating new lyrics", unique=True),
+            model_name="album",
+            name="name",
+            field=models.TextField(
+                db_index=True,
+                help_text="Album name - can alternatively use 'id' field set to id of existing album when creating new lyrics",
+                unique=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='song',
-            name='name',
-            field=models.TextField(db_index=True, help_text="Song name - can alternatively use 'id' field set to id of existing song when creating new lyrics", unique=True),
+            model_name="song",
+            name="name",
+            field=models.TextField(
+                db_index=True,
+                help_text="Song name - can alternatively use 'id' field set to id of existing song when creating new lyrics",
+                unique=True,
+            ),
         ),
     ]

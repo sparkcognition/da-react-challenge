@@ -8,14 +8,13 @@ from swift_lyrics.models import Lyric, Album, Song, Artist
 
 
 def load_initial_data(apps, schema_editor):
-    default_artist = Artist.objects.create(
-        name="Taylor Swift", first_year_active=2003)
-    json_data = open('swift_lyrics/fixtures/quotes.json')
+    default_artist = Artist.objects.create(name="Taylor Swift", first_year_active=2003)
+    json_data = open("swift_lyrics/fixtures/quotes.json")
     data = json.load(json_data)
     for d in data:
-        album_name = d['album']
-        song_name = d['song']
-        text = d['quote']
+        album_name = d["album"]
+        song_name = d["song"]
+        text = d["quote"]
 
         album = Album.objects.filter(name=album_name).first()
         if album is None:
@@ -34,9 +33,7 @@ def load_initial_data(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('swift_lyrics', '0001_initial'),
+        ("swift_lyrics", "0001_initial"),
     ]
 
-    operations = [
-        migrations.RunPython(load_initial_data)
-    ]
+    operations = [migrations.RunPython(load_initial_data)]

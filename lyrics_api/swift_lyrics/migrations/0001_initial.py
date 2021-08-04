@@ -8,44 +8,124 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Artist',
+            name="Artist",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.TextField(db_index=True, help_text="Artist name - can alternatively use 'id' field set to id of existing artist when creating new lyrics", unique=True)),
-                ('first_year_active', models.PositiveSmallIntegerField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.TextField(
+                        db_index=True,
+                        help_text="Artist name - can alternatively use 'id' field set to id of existing artist when creating new lyrics",
+                        unique=True,
+                    ),
+                ),
+                (
+                    "first_year_active",
+                    models.PositiveSmallIntegerField(blank=True, null=True),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Album',
+            name="Album",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.TextField(db_index=True, help_text='Album name', unique=True)),
-                ('year', models.PositiveSmallIntegerField(null=True)),
-                ('artist', models.ForeignKey(help_text='Artist', on_delete=django.db.models.deletion.CASCADE, related_name='albums', to='swift_lyrics.artist'))
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.TextField(
+                        db_index=True, help_text="Album name", unique=True
+                    ),
+                ),
+                ("year", models.PositiveSmallIntegerField(null=True)),
+                (
+                    "artist",
+                    models.ForeignKey(
+                        help_text="Artist",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="albums",
+                        to="swift_lyrics.artist",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Song',
+            name="Song",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.TextField(db_index=True, help_text='Song name', unique=True)),
-                ('album', models.ForeignKey(help_text='Album', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='songs', to='swift_lyrics.album')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.TextField(db_index=True, help_text="Song name", unique=True),
+                ),
+                (
+                    "album",
+                    models.ForeignKey(
+                        help_text="Album",
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="songs",
+                        to="swift_lyrics.album",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Lyric',
+            name="Lyric",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('text', models.TextField(db_index=True, help_text='Lyrics from a song/album')),
-                ('votes', models.IntegerField(default=0)),
-                ('upvotes', models.IntegerField(default=0)),
-                ('downvotes', models.IntegerField(default=0)),
-                ('song', models.ForeignKey(help_text='Song', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='lyrics', to='swift_lyrics.song')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "text",
+                    models.TextField(
+                        db_index=True, help_text="Lyrics from a song/album"
+                    ),
+                ),
+                ("votes", models.IntegerField(default=0)),
+                ("upvotes", models.IntegerField(default=0)),
+                ("downvotes", models.IntegerField(default=0)),
+                (
+                    "song",
+                    models.ForeignKey(
+                        help_text="Song",
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="lyrics",
+                        to="swift_lyrics.song",
+                    ),
+                ),
             ],
         ),
     ]
