@@ -22,7 +22,7 @@ from swift_lyrics.views import HealthCheckView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('health/', HealthCheckView.as_view()),
+    path('health/', HealthCheckView.as_view(), name="health"),
     url(r'^swiftlyrics/?', include('swift_lyrics.urls')),
 
 ]

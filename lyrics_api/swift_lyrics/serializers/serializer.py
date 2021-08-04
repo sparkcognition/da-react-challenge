@@ -17,6 +17,15 @@ class BaseAlbumSerializer(serializers.ModelSerializer):
         model = Album
         fields = ['id', 'name', 'year']
 
+
+class CompleteAlbumSerializer(BaseAlbumSerializer):
+
+    artist = BaseArtistSerializer()
+
+    class Meta:
+        model = BaseAlbumSerializer.Meta.model
+        fields = BaseAlbumSerializer.Meta.fields + ['artist']
+
 class BaseSongSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -82,7 +91,7 @@ class AlbumDetailSerializer(BaseAlbumSerializer):
 
 
 class SongSerializer(BaseSongSerializer):
-    album = BaseAlbumSerializer()
+    album = CompleteAlbumSerializer()
 
     class Meta(BaseSongSerializer.Meta):
         fields = BaseSongSerializer.Meta.fields + ['album']
@@ -109,7 +118,7 @@ class LyricDetailSerializer(LyricSerializer):
         elif isinstance(song, dict):
             # If album_id, then album already exists - just fetch,
             # then handle create/fetch song
-            album_id = self.initial_data.get('album', None)
+            album_id = song.get('album', None)
             album = None
             if not album_id:
                 raise serializers.ValidationError(dict(
