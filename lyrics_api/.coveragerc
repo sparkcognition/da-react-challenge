@@ -20,5 +20,5 @@ show_missing = True
 skip_covered = True
 
 [run]
-source = .
+source = lyrics_api/
 branch = True 
