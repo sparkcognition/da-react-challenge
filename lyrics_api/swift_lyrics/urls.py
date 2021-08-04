@@ -21,7 +21,6 @@ schema_view = get_schema_view(
 
 default_router = routers.DefaultRouter()
 default_router.register(r"artist", views.ArtistViewSet, basename="artist")
-# default_router.register(r'lyric', views.APIDetail, basename='api_index')
 
 urlpatterns = [
     url(r"^lyric/$", views.APIIndex.as_view(), name="api_index"),
