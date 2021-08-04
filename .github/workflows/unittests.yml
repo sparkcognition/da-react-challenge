@@ -27,7 +27,7 @@ jobs:
     - name: Run tests
       run: |
         coverage erase
-        coverage run --source . lyrics_api/manage.py test
+        coverage run --source lyrics_api/ lyrics_api/manage.py test
         coverage report
       env:
         SYSTEM_ENV: DEVELOPMENT
