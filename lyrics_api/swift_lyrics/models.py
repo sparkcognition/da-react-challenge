@@ -2,6 +2,13 @@ from django.db import models
 
 
 class Artist(models.Model):
+    """
+    Artist model.
+
+    :cvar name: Str, name of artist
+    :cvar first_year_active: Integer, artist's first year of activity
+    """
+
     name = models.TextField(
         blank=False,
         db_index=True,
@@ -14,6 +21,14 @@ class Artist(models.Model):
 
 
 class Album(models.Model):
+    """
+    Album model.
+
+    :cvar name: Str, name of album
+    :cvar year: Integer, album's date of release
+    :cvar artist: Artist, album's artist
+    """
+
     name = models.TextField(
         blank=False,
         db_index=True,
@@ -29,6 +44,13 @@ class Album(models.Model):
 
 
 class Song(models.Model):
+    """
+    Song model.
+
+    :cvar name: Str, name of song 
+    :cvar album: Album, song's album 
+    """
+
     name = models.TextField(
         blank=False,
         db_index=True,
@@ -48,6 +70,16 @@ class Song(models.Model):
 
 
 class Lyric(models.Model):
+    """
+    Lyric model.
+
+    :cvar text: Str, song lyrics
+    :cvar song: Song, lyrics to which the lyric belongs to
+    :cvar votes: Int, total number of votes
+    :cvar upvotes: Int, total number of upvotes
+    :cvar downvotes: Int, total number of downvotes
+    """
+
     text = models.TextField(
         blank=False, db_index=True, help_text="Lyrics from a song/album"
     )
