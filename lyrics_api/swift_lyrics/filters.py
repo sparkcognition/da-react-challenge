@@ -18,7 +18,7 @@ class ArtistFilter(filters.FilterSet):
 
 class RandomLyricFilter(filters.FilterSet):
     """
-    This class adds support for Artist filtering
+    This class adds support for Random Lyric filtering by Artist
     """
 
     artist_id = NumberFilter(field_name="song", lookup_expr="album__artist__id")
