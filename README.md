@@ -10,7 +10,7 @@ The changes from the original repository from which this was forked were written
    - Tests and coverage
       - Tests can be run with the following command (executed from the `lyrics_api` directory):
       `coverage run --source . manage.py test && coverage report`
-      The current project has a 100% coverage, results can be seen in the Actions section
+      - The current project has a 100% coverage, results can be seen in the Actions section
       of the repository.
 
    - Configuration
