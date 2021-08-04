@@ -1,3 +1,22 @@
+### Project description:
+This repository is part of the application process for SparkCognition.
+The changes from the original repository from which this was forked were written, tested and commented by José Carlos Delgado.
+
+   - Postman Collection
+      - The Postman Collection for this project can be found in `https://www.getpostman.com/collections/1974be9f9d0872844638`
+      and can be also found inside this repository as `da-react-challenge-collection.postman_collection.json`.
+      - This collection is meant to be run sequentially.
+
+   - Tests and coverage
+      - Tests can be run with the following command (executed from the `lyrics_api` directory):
+      `coverage run --source . manage.py test && coverage report`
+      - The current project has a 100% coverage, results can be seen in the Actions section
+      of the repository.
+
+   - Configuration
+      - Configuration remains the same as the original project.
+
+
 ### Requirements:
 - Prereqs
    - `brew install pyenv`

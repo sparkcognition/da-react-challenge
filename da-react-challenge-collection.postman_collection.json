@@ -1,0 +1,588 @@
+{
+	"info": {
+		"_postman_id": "f5a1ceae-6784-4518-b9b4-87f3526651ee",
+		"name": "da-react-challenge collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create an artist",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Smashing Pumpkins\",\n    \"first_year_active\": 1989\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/swiftlyrics/artist/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"swiftlyrics",
+						"artist",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update an artist",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"first_year_active\": 1988\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/swiftlyrics/artist/2/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"swiftlyrics",
+						"artist",
+						"2",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update an artist",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"The Smashing Pumpkins\",\n    \"first_year_active\": 1987\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/swiftlyrics/artist/2/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"swiftlyrics",
+						"artist",
+						"2",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve all artists",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/swiftlyrics/artist/?size=20&page=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"swiftlyrics",
+						"artist",
+						""
+					],
+					"query": [
+						{
+							"key": "size",
+							"value": "20"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve a single artist",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/swiftlyrics/artist/1/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"swiftlyrics",
+						"artist",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete an artist",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"first_year_active\": 1987\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/swiftlyrics/artist/2/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"swiftlyrics",
+						"artist",
+						"2",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create an album with artist info",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Gish\",\n    \"artist\": {\n        \"name\": \"The Smashing Pumpkins\",\n        \"first_year_active\": 1987\n    },\n    \"year\": 1991\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/swiftlyrics/album/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"swiftlyrics",
+						"album",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create an album from artist name",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Siamese Dream\",\n    \"artist\": {\n        \"name\": \"The Smashing Pumpkins\"\n    },\n    \"year\": 1993\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/swiftlyrics/album/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"swiftlyrics",
+						"album",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create an album from artist id",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Mellon Collie and the Infinite Sadness\",\n    \"artist\": 3,\n    \"year\": 1995\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/swiftlyrics/album/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"swiftlyrics",
+						"album",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve all albums",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/swiftlyrics/album/?size=20&page=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"swiftlyrics",
+						"album",
+						""
+					],
+					"query": [
+						{
+							"key": "size",
+							"value": "20"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve a single album",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/swiftlyrics/album/1/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"swiftlyrics",
+						"album",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete an album",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/swiftlyrics/album/13/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"swiftlyrics",
+						"album",
+						"13",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a lyric with song info",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"And she knows, she knows, she knows...\",\n    \"song\": {\n        \"name\": \"Rhinoceros\",\n        \"album\": 11\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/swiftlyrics/lyric/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"swiftlyrics",
+						"lyric",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a lyric with song",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"Colors show after the moon. I should go, see you in June. Your way.\",\n    \"song\": 80\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/swiftlyrics/lyric/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"swiftlyrics",
+						"lyric",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upvote song",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/swiftlyrics/lyric/upvote/119/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"swiftlyrics",
+						"lyric",
+						"upvote",
+						"119",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Downvote song",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/swiftlyrics/lyric/downvote/119/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"swiftlyrics",
+						"lyric",
+						"downvote",
+						"119",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve a random song",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/swiftlyrics/lyric/random/?artist=Pumpkins",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"swiftlyrics",
+						"lyric",
+						"random",
+						""
+					],
+					"query": [
+						{
+							"key": "artist",
+							"value": "Pumpkins"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve a random song by artist name",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/swiftlyrics/lyric/random/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"swiftlyrics",
+						"lyric",
+						"random",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve a random song by artist id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/swiftlyrics/lyric/random/?artist_id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"swiftlyrics",
+						"lyric",
+						"random",
+						""
+					],
+					"query": [
+						{
+							"key": "artist_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve a random song by a non-available artist",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/swiftlyrics/lyric/random/?artist=Alice",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"swiftlyrics",
+						"lyric",
+						"random",
+						""
+					],
+					"query": [
+						{
+							"key": "artist",
+							"value": "Alice"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://storeurl.com/api/"
+		}
+	]
+}
