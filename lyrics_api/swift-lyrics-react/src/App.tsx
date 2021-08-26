@@ -1,49 +1,90 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import logo from './logo.svg';
 import './App.css';
-import {Button, Table} from "reactstrap";
+import {Table} from "reactstrap";
+import LyricEntry from "./components/LyricEntry";
+import api from './utils/api';
+import {Lyric} from './types';
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Find your favorite!
-        </p>
-        <Table>
-         <thead>
-            <tr>
-              <th></th>
-              <th>Lyrics</th>
-              <th>Song</th>
-              <th>Album</th>
-              <th></th>
-              <th></th>
-            </tr>
-          </thead>
-            <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>"Their parties were tasteful, if a little loud"</td>
-                  <td>The Last Great American Dynasty</td>
-                  <td>Folklore</td>
-                  <td>Edit</td>
-                  <td>Delete</td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>"In my feelings more than Drake"</td>
-                  <td>I Forgot That You Existed</td>
-                  <td>Lover</td>
-                  <td>Edit</td>
-                  <td>Delete</td>
-                </tr>
-            </tbody>
-        </Table>
-      </header>
-    </div>
-  );
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [result, setResult] = useState<Lyric[]>([]);
+
+
+  async function getLyrics () {
+    try {
+      const {data} = await api.get('/lyric/');
+      if (data === undefined) {
+        setError(true);
+        // throw(new Error('Invalid response'));
+      }
+      setResult(data.results);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getLyrics();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <p>
+            Cargando...
+          </p>
+        </header>
+      </div>
+    )
+  } else if (error) {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <p>
+            Error al cargar.
+          </p>
+        </header>
+      </div>
+    )
+  } else {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <p>
+            Find your favorite!
+          </p>
+          <Table dark>
+           <thead>
+              <tr>
+                <th></th>
+                <th>Lyrics</th>
+                <th>Song</th>
+                <th>Album</th>
+                <th>Artist</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+              <tbody>
+                {
+                  result.map((lyric) => (
+                    <LyricEntry key={lyric.id} lyric={lyric}></LyricEntry>
+                  ))
+                }
+              </tbody>
+          </Table>
+        </header>
+      </div>
+    )
+  }
 }
 
 export default App;
